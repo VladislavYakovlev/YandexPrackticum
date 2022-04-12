@@ -1,0 +1,20 @@
+#include <set>
+#include <string>
+#include <iostream>
+#include <numeric>
+using namespace std;
+
+string soed(string sd, string stop_word){
+    return sd+ " -" + stop_word;
+}
+
+string AddStopWords(const string& query, const set<string>& stop_words) {
+   return accumulate(stop_words.begin(),stop_words.end(),query,soed); 
+}
+int main(){
+    string query = "some tasty oranges";
+    set<string> stop_words {"of", "in" };
+    string stw = AddStopWords(query, stop_words);
+    cout << stw;
+    
+}
