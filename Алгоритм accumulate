@@ -1,0 +1,16 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+using namespace std;
+
+double Average(const vector<int>& xs) {
+   double x = accumulate(xs.begin(),xs.end(),0.0);
+    x = x / xs.size();
+    return x;
+}
+
+int main() {
+    // не меняйте код main
+    cout << Average({1, 2, 2}) << endl;
+    return 0;
+}
