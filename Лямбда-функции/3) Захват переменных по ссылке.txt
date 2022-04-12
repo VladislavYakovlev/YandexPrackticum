@@ -1,0 +1,26 @@
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+using namespace std;
+
+int CountAndAddNewDogs(const vector<string>& new_dogs,
+    const map<string, int>& max_amount, map<string, int>& shelter) {
+    
+    auto lambda = [&max_amount, &shelter](const string& dog) {
+
+        if (max_amount.at(dog) > shelter[dog])
+        {
+            ++shelter[dog];
+            return true;
+        }
+        else
+            return false;
+         };
+    
+  return count_if(new_dogs.begin(), new_dogs.end(),lambda);
+}
+
+int main() {
+    return 0;
+}
