@@ -1,0 +1,95 @@
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
+#include <iostream>
+ 
+using namespace std;
+ 
+// Перечислимый тип для статуса задачи
+enum class TaskStatus {
+    NEW,          // новая
+    IN_PROGRESS,  // в разработке
+    TESTING,      // на тестировании
+    DONE          // завершена
+};
+ 
+// Объявляем тип-синоним для map<TaskStatus, int>,
+// позволяющего хранить количество задач каждого статуса
+using TasksInfo = map<TaskStatus, int>;
+ 
+class TeamTasks {
+public:
+    // Получить статистику по статусам задач конкретного разработчика
+    const TasksInfo& GetPersonTasksInfo(const string& person) const {
+        return person_task.at(person);
+    }
+ 
+    // Добавить новую задачу (в статусе NEW) для конкретного разработчитка
+    void AddNewTask(const string& person) {
+ 
+        ++person_task[person][TaskStatus::NEW];
+ 
+    }
+ 
+    TaskStatus Next(TaskStatus status)
+    {
+        status = static_cast<TaskStatus>( static_cast<int>(status) + 1);
+        return status;
+    }
+ 
+    // Обновить статусы по данному количеству задач конкретного разработчика,
+    // подробности см. ниже
+    tuple<TasksInfo, TasksInfo> PerformPersonTasks(
+        const string& person, int task_count)
+    {
+        if (person_task.count(person) == 0)
+        {
+            return tuple(TasksInfo{}, TasksInfo{});
+        }
+ 
+        auto untoched = person_task.at(person);
+        TasksInfo nov, ost;
+        int x = task_count;
+ 
+        for (int i = 0; i < x; ++i){
+            if (untoched[TaskStatus::NEW] > 0){
+                --untoched[TaskStatus::NEW];
+                ++nov[TaskStatus::IN_PROGRESS];
+                --task_count;
+            }
+ 
+        }
+        x = task_count;
+        for (int i = 0; i < x; ++i){
+            if (untoched[TaskStatus::IN_PROGRESS] > 0){
+                --untoched[TaskStatus::IN_PROGRESS];
+                ++nov[TaskStatus::TESTING];
+                --task_count;
+            }
+          }
+        x = task_count;
+         for (int i = 0; i < x; ++i){
+            if (untoched[TaskStatus::TESTING] > 0){
+                --untoched[TaskStatus::TESTING];
+                ++nov[TaskStatus::DONE];
+                --task_count;
+            }
+            
+        }
+ 
+ 
+                
+        ost[TaskStatus::NEW] = untoched[TaskStatus::NEW] + nov[TaskStatus::NEW];
+        ost[TaskStatus::IN_PROGRESS] = untoched[TaskStatus::IN_PROGRESS] + nov[TaskStatus::IN_PROGRESS];
+        ost[TaskStatus::TESTING] = untoched[TaskStatus::TESTING] + nov[TaskStatus::TESTING];
+        ost[TaskStatus::DONE] = untoched[TaskStatus::DONE] + nov[TaskStatus::DONE];
+        
+        untoched.erase(TaskStatus::DONE);
+        person_task[person] = ost;
+        return tuple(nov, untoched);
+    }
+private:
+    map<string, TasksInfo> person_task;
+ 
+};
