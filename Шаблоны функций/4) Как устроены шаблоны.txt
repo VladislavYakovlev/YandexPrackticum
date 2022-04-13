@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+#include <typeinfo>
+#include <cmath>
+#include <algorithm>
+ 
+ 
+using namespace std;
+
+template <typename Documents, typename Term>
+vector<double> ComputeTfIdfs(const Documents& documents, const Term& term){
+    vector<double> tf;
+    int document_freq = 0;
+    vector<double> ved;
+    for (const auto& document : documents)
+    {
+        int word_count = count(begin(document), end(document), term);
+        
+     tf.push_back(static_cast<double>(word_count) / static_cast<double>(document.size()));
+            document_freq += count(begin(document), end(document), term);
+    } 
+    for (int i = 0; i < tf.size(); i++) {
+ 
+        ved.push_back(tf[i] * log(static_cast<double>(documents.size()) / static_cast<double>(document_freq)));
+ 
+    }
+    return ved;
+}
+
+
+
+
+
+
+
+int main() {
+    const vector<vector<string>> documents = {
+        {"белый"s, "кот"s, "и"s, "модный"s, "ошейник"s},
+        {"пушистый"s, "кот"s, "пушистый"s, "хвост"s},
+        {"ухоженный"s, "пёс"s, "выразительные"s, "глаза"s},
+    };
+    const auto& tf_idfs = ComputeTfIdfs(documents, "кот"s);
+    for (const double tf_idf : tf_idfs) {
+        cout << tf_idf << " "s;
+    }
+    cout << endl;
+}

@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+
+template <typename elem>
+ostream& Print(ostream& out, elem container){
+     bool word = true;
+    for (const auto& i : container) { 
+    if(!word){
+         out << ", "s;  
+    }
+    out << i;
+    word = false;    
+    }
+    return out;
+}
+
+template <typename Element>
+ostream& operator<<(ostream& out, const vector<Element>& container) {
+ return Print(out, container);
+}  
+ 
+template <typename Element>
+ostream& operator<<(ostream& out, const set<Element>& container) {
+ return Print(out, container);
+} 
+
+int main() {
+const set<string> cats = {"Мурка"s, "Белка"s, "Георгий"s, "Рюрик"s};
+cout << cats << endl;
+
+const vector<int> ages = {10, 5, 2, 12};
+cout << ages << endl; 
+}
